@@ -16,7 +16,7 @@ node("docker") {
 
     stage("Build Docker Image") {
         def revision = params.commit ?: sh(returnStdout: true, script: "git ls-remote --heads https://github.com/BitcoinUnlimited/BitcoinUnlimited.git ${env.BRANCH_NAME} | cut -f 1").trim()
-        tag = sh(returnStdout: true, script: "git ls-remote --tags https://github.com/BitcoinUnlimited/BitcoinUnlimited.git | grep \"${revision}\" | cut -f 2 | cut -d / -f 3").trim()
+        tag = sh(returnStdout: true, script: "git ls-remote --tags https://github.com/BitcoinUnlimited/BitcoinUnlimited.git | grep \"${revision}\" | head -n 1 | cut -f 2 | cut -d / -f 3 | cut -d \"^\" -f 1").trim()
 
         currentBuild.displayName = tag ?: "${env.BRANCH_NAME}-${env.BUILD_NUMBER}-${revision.take(6)}"
 
